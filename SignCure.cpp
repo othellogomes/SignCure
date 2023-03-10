@@ -30,16 +30,18 @@ cx_mat X = {{0, 1},
 cx_mat Y = { {0, -imaginary},
           {imaginary, 0} };
 cx_mat Z = {{1, 0},
-          {0, -1}}; /* Not initialising properly */
+          {0, -1}};
 cx_mat I(2, 2, fill::eye);
-
-cout << X << endl;
 
 /*mat X = {{0, 1},{1, 0}};
 mat Y = {{0, eye},{eye, 0}};          
 mat Z = {{1,0},{0,-1}};
 mat I = {{1,0},{0,1}};
 */        
+
+/*int H_1 = zeros(2^[n+m]); */ /*Initialising Hamiltonian*/
+
+/*Intialise S for the if and else statements*/
 
 int H = zeros({2^[n+m]}{2^[n+m]}); /*Initialising Hamiltonian*/
   for (int i = 0; i < m-1; i++){
@@ -50,13 +52,13 @@ int H = zeros({2^[n+m]}{2^[n+m]}); /*Initialising Hamiltonian*/
     if sign(inst[i][0] == -1){
       S[0] = X;
    }
-      else{
+  else{
         S[0] = Z;
       }
   }
     
   for (int i = 0; i < m-1; i++){
-    H_m = - (X + Z + I); 
+    int H_m = - (X + Z + I); 
     if sign(inst[i][1] == -1){
       S[1] = X;
    }
@@ -73,13 +75,40 @@ for (int i = 0; i < m-1; i++){
         S[2] = Z;
     }
   }
-qubits = abs(inst[1][:])-1;
-  if 
+int qubits = abs(inst[1][:])-1;
+  if (qubits = 0){
+    H_k = S[]
+  }
+  else{
+    H_k = I; /* */
+  }
+  for (int j = 1; j < n-1; j++){
+    if(j=qubits){
+      H_k = kron(H_k,S)  
+    }
+    else{
+      H_k = kron(H_k, I)
+    }
+  }
+for (int j = n; j < n-m+1; j++){
+  if(j-n == i){
+    H_k = kron(H_k, H_m)
+  }
+  else{
+    H_k = kron(H_k, I)
+  }
+}
+H = H + H_k; 
 /*Intialise S for the if and else statements*/
 
 /* Compute Avg. Sign <S>*/
-  
-  
+
+int eH = expmat(-H);
+
+int avgSign = (trace(eH)/trace(abs(eH)));
+
+/* Compute Avg. Sign <S>*/
+
 
 return 0;
 }
