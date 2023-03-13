@@ -42,6 +42,9 @@ cx_mat I(2, 2, fill::eye);
 cx_mat ZI = arma::kron(Z,I);
 
 ZI.print();
+  
+cx_mat H_1= arma::zeros(2^(n+m),2^(n+m)); //Initialising Hamiltonians
+cout << H_1 << endl;
 
 }
 /*mat X = {{0, 1},{1, 0}};
