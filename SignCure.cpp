@@ -20,7 +20,7 @@ int main() {
 
     /*Generate 3-SAT instances in this part of the code*/
     int m = 2;
-    int n = 4;
+    int n = 3;
     int inst[m][3];
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < 3; j++) {
@@ -51,11 +51,12 @@ int main() {
     //Initialising Hamiltonians
     cx_mat HC(pow(2, n + m), pow(2, n + m));
     HC.fill(0.0 + 0.0i);
-    HC.brief_print();
 
     cx_mat H_m = - (X + Z + I);
     cx_mat S[3];
-    for (int i = 0; i < m; i++) {
+    cx_mat H;
+    cx_mat H_k;
+    for (int i = 0; i < m; i++){
         /*Construct H_C */
         /*order qubits: 0....n-1 and n....n+m-1 */
         for (int j = 0; j < 3; j++) {
@@ -66,11 +67,39 @@ int main() {
                 S[j] = Z;
             }
         }
-
-        H_m = kron(H_m, S[0]) + kron(I, S[1]) + kron(I, S[2]);
     }
-
-    cx_mat H_k = I;
+      for (int i = 0; i < m; i++) {
+                if (inst[i][0]== -1) {
+                    H_k = S[0];
+                }
+                else if (inst[i][1]== -1) {
+                    H_k = S[1];
+                }
+                else if(inst[i][2]== -1) {
+                    H_k = S[2];
+                }
+                else{
+                    H_k = I;
+                }
+      }
+    for (int j = 0; j < n; j++){ 
+    for (int i = 0; i < m; i++){
+                   if (inst[i][0] - 1 == j) {
+                    H_k = kron(H_k,S[0]);
+                }
+                else if (inst[i][1] - 1 == j) {
+                    H_k = kron(H_k,S[1]);
+                }
+                else if(inst[i][2] - 1 == j){
+                    H_k = kron(H_k,S[2]);
+                }
+                else{
+                    H_k = kron(H_k,I);
+                }
+    }
+    }
+            
+    H_k = I;
     for (int j = 0; j < n; j++) {
         bool found_qubit = false;
         for (int i = 0; i < m; i++) {
@@ -85,10 +114,9 @@ int main() {
         else {
             H_k = kron(H_k, I);
         }
+        cx_mat H = HC + H_k;
     }
-
-    cx_mat H = HC + H_k;
-
+ H.print();
     return 0;
 }
 //  
