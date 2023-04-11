@@ -20,7 +20,7 @@ int main() {
 
     /*Generate 3-SAT instances in this part of the code*/
     int m = 2;
-    int n = 3;
+    int n = 4;
     int inst[m][3];
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < 3; j++) {
@@ -56,19 +56,46 @@ int main() {
     cx_mat S[3];
     cx_mat H;
     cx_mat H_k;
+    cx_mat H_temp;
     for (int i = 0; i < m; i++){
         /*Construct H_C */
         /*order qubits: 0....n-1 and n....n+m-1 */
-        for (int j = 0; j < 3; j++) {
-            if (inst[i][j] < 0) {
-                S[j] = X;
+        for (int s = 0; s < 3; s++) {
+            int variable = inst[i][s];
+            if (abs(variable)== 1){
+            if (variable < 0) {
+                H_temp = X;
+            }
+            else if(variable > 0){
+                H_temp = Z;
             }
             else {
-                S[j] = Z;
+                H_temp = I;
             }
         }
-    }
-      for (int i = 0; i < m; i++) {
+         if (abs(variable)== 2){
+            if (variable < 0) {
+                H_temp = X;
+            }
+            else if(variable > 0){
+                H_temp = Z;
+            }
+            else {
+                H_temp = I;
+            }
+        }
+        if (abs(variable)== 3){
+            if (variable < 0) {
+                H_temp = X;
+            }
+            else if(variable > 0){
+                H_temp = Z;
+            }
+            else {
+                H_temp = I;
+            }
+        }
+        }
                 if (inst[i][0]== -1) {
                     H_k = S[0];
                 }
@@ -91,15 +118,13 @@ int main() {
                     H_k = kron(H_k,S[1]);
                 }
                 else if(inst[i][2] - 1 == j){
-                    H_k = kron(H_k,S[2]);
+                    H_k = kron(H,S[2]);
                 }
                 else{
                     H_k = kron(H_k,I);
                 }
     }
     }
-            
-    H_k = I;
     for (int j = 0; j < n; j++) {
         bool found_qubit = false;
         for (int i = 0; i < m; i++) {
@@ -119,71 +144,10 @@ int main() {
  H.print();
     return 0;
 }
-//  
-//     /*Construct H_C */
-//     /*order qubits: 0....n-1 and n....n+m-1 */
-    
-//     H_m = - (X + Z + I); 
-//     if sign(inst[i][0] == -1){
-//       S[0] = X;
-//    }
-//   else{
-//         S[0] = Z;
-//       }
-//   }
-    
-//   for (int i = 0; i < m-1; i++){
-//     int H_m = - (X + Z + I); 
-//     if sign(inst[i][1] == -1){
-//       S[1] = X;
-//    }
-//       else{
-//         S[1] = Z;
-//     }
-//   }
-// for (int i = 0; i < m-1; i++){
-//     H_m = - (X + Z + I); 
-//     if sign(inst[i][2] == -1){
-//       S[2] = X;
-//    }
-//       else{
-//         S[2] = Z;
-//     }
-//   }
-// int qubits = abs(inst[1][:])-1;
-//   if (qubits = 0){
-//     H_k = S[]
-//   }
-//   else{
-//     H_k = I; /* */
-//   }
-//   for (int j = 1; j < n-1; j++){
-//     if(j=qubits){
-//       H_k = kron(H_k,S)  
-//     }
-//     else{
-//       H_k = kron(H_k, I)
-//     }
-//   }
-// for (int j = n; j < n-m+1; j++){
-//   if(j-n == i){
-//     H_k = kron(H_k, H_m)
-//   }
-//   else{
-//     H_k = kron(H_k, I)
-//   }
-// }
-// H = H + H_k; 
-// /*Intialise S for the if and else statements*/
+/*Intialise S for the if and else statements*/
 
-// /* Compute Avg. Sign <S>*/
+/* Compute Avg. Sign <S>*/
 
-// int eH = expmat(-H);
+//int eH = expmat(-H);
 
-// int avgSign = (trace(eH)/trace(abs(eH)));
-
-// /* Compute Avg. Sign <S>*/
-
-
-// return 0;
-// }
+//int avgSign = (trace(eH)/trace(abs(eH)));
