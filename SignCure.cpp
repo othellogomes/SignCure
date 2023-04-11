@@ -95,6 +95,17 @@ int main() {
                 H_temp = I;
             }
         }
+            if (abs(variable) < n){
+            if (variable < 0) {
+                H_temp = X;
+            }
+            else if(variable > 0){
+                H_temp = Z;
+            }
+            else {
+                H_temp = I;
+            }
+        }
         }
                 if (inst[i][0]== -1) {
                     H_k = S[0];
