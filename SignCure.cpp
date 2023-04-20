@@ -61,9 +61,11 @@ int main() {
         /*Construct H_C */
         /*order qubits: 0....n-1 and n....n+m-1 */
         for (int s = 0; s < 3; s++) {
+         for (int s = 0; s < 3; s++) {
             int variable = inst[i][s];
-            if (abs(variable)== 1){
-            if (variable < 0) {
+             //How do I account this loop for like multiple variables?
+            for (variable < n; variable++){
+             if (variable < 0) {
                 H_temp = X;
             }
             else if(variable > 0){
@@ -72,70 +74,31 @@ int main() {
             else {
                 H_temp = I;
             }
-        }
-         if (abs(variable)== 2){
-            if (variable < 0) {
-                H_temp = X;
             }
-            else if(variable > 0){
-                H_temp = Z;
-            }
-            else {
-                H_temp = I;
-            }
-        }
-        if (abs(variable)== 3){
-            if (variable < 0) {
-                H_temp = X;
-            }
-            else if(variable > 0){
-                H_temp = Z;
-            }
-            else {
-                H_temp = I;
-            }
-        }
-            if (abs(variable) < n){
-            if (variable < 0) {
-                H_temp = X;
-            }
-            else if(variable > 0){
-                H_temp = Z;
-            }
-            else {
-                H_temp = I;
-            }
-        }
-        }
-                if (inst[i][0]== -1) {
-                    H_k = S[0];
-                }
-                else if (inst[i][1]== -1) {
-                    H_k = S[1];
-                }
-                else if(inst[i][2]== -1) {
-                    H_k = S[2];
-                }
-                else{
-                    H_k = I;
-                }
       }
-    for (int j = 0; j < n; j++){ 
-    for (int i = 0; i < m; i++){
-                   if (inst[i][0] - 1 == j) {
-                    H_k = kron(H_k,S[0]);
-                }
-                else if (inst[i][1] - 1 == j) {
-                    H_k = kron(H_k,S[1]);
-                }
-                else if(inst[i][2] - 1 == j){
-                    H_k = kron(H,S[2]);
-                }
-                else{
-                    H_k = kron(H_k,I);
-                }
-    }
-    }
+      for (j = 1; j < n; j++){
+        if(variable < 0){
+            H_temp = kron(H_temp, X);
+        }
+        else if(variable > 0){
+            H_temp = kron(H_temp, Z);
+        }
+        else{
+            H_temp = kron(H_temp, I);
+        }
+      }
+      for (j = 1; j < n+m; j++){
+        if(variable < 0){
+            H_temp = kron(H_temp, X);
+        }
+        else if(variable > 0){
+            H_temp = kron(H_temp, Z);
+        }
+        else{
+            H_temp = kron(H_temp, I);
+        }
+      }
+            
     for (int j = 0; j < n; j++) {
         bool found_qubit = false;
         for (int i = 0; i < m; i++) {
