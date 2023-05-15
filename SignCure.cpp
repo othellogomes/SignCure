@@ -1,4 +1,7 @@
 /* Othello D. Gomes
+UMD - Institute for Advanced Computer Studies
+QuICS
+05/15/2023
 Sign Curing Numerics
 Use c++14
 */
@@ -78,6 +81,25 @@ int main() {
         H_m.brief_print();
     }
 }
+/* Below is the code I've made to generate the variable Hamiltonians: so far, it has yielded some reliable results but the signs for the full Hamiltonian, which are tensored with the Clause Hamiltonians in the form of
+kron(H_m,HC) appear to be negative -- which shouldn't be the case since the Full Hamiltonian is supposed to be invariant under conjugation.*/
+
+/* for (int i = 0; i < n; i++) {
+        cx_mat H_i;
+        H_i = 1.0 + 0i;
+        for (int j = 0; j < n; j++) {
+            if (i == j) {
+                H_i = kron(H_i, Z);
+            } else {
+                H_i = kron(H_i, X);
+            }
+        }
+        cout << "Variable Hamiltonian" << endl;
+        HC += H_i;
+        HC.print();
+                                            */ 
+
+
 /*Intialise S for the if and else statements*/
 
 /* Compute Avg. Sign <S>*/
