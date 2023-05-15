@@ -19,7 +19,7 @@ int main() {
     srand(time(NULL));
 
     /*Generate 3-SAT instances in this part of the code*/
-    int m = 2;
+    int m = 4;
     int n = 4;
     int inst[m][3];
     for (int i = 0; i < m; i++) {
@@ -49,74 +49,34 @@ int main() {
     cx_mat I(2, 2, fill::eye);
 
     //Initialising Hamiltonians
-    cx_mat HC(pow(2, n + m), pow(2, n + m));
+    cx_mat HC(pow(2, n), pow(2, n));
     HC.fill(0.0 + 0.0i);
 
-    cx_mat H_m = - (X + Z + I);
-    cx_mat S[3];
+    cx_mat H_array[m];
     cx_mat H;
-    cx_mat H_k;
-    cx_mat H_temp;
-    for (int i = 0; i < m; i++){
-        /*Construct H_C */
-        /*order qubits: 0....n-1 and n....n+m-1 */
-        for (int s = 0; s < 3; s++) {
-         for (int s = 0; s < 3; s++) {
-            int variable = inst[i][s];
-             //How do I account this loop for like multiple variables?
-            for (variable < n; variable++){
-             if (variable < 0) {
-                H_temp = X;
+    cx_mat H_m_i = -(X+Z+I);
+    cx_mat H_m;
+    cx_mat S[3] = {Z, X, I};
+
+    //This generates the clause Hamiltonian using the for loop for tensoring with I or Clause side of H_m.
+    //The code is done backwards, meaning that the tensor conditionals are done first and the main for loop is done later on.
+    //This makes no difference whatsoever, as in how the code is looped (forward or backward) will make no difference.
+    for (int k = 0; k < m; k++){
+        for (int o = 0; o < m; o++){
+            if (o == k){
+                H_array[o] = H_m_i;
             }
-            else if(variable > 0){
-                H_temp = Z;
-            }
-            else {
-                H_temp = I;
-            }
-            }
-      }
-      for (j = 1; j < n; j++){
-        if(variable < 0){
-            H_temp = kron(H_temp, X);
-        }
-        else if(variable > 0){
-            H_temp = kron(H_temp, Z);
-        }
-        else{
-            H_temp = kron(H_temp, I);
-        }
-      }
-      for (j = 1; j < n+m; j++){
-        if(variable < 0){
-            H_temp = kron(H_temp, X);
-        }
-        else if(variable > 0){
-            H_temp = kron(H_temp, Z);
-        }
-        else{
-            H_temp = kron(H_temp, I);
-        }
-      }
-            
-    for (int j = 0; j < n; j++) {
-        bool found_qubit = false;
-        for (int i = 0; i < m; i++) {
-            if (abs(inst[i][0]) - 1 == j || abs(inst[i][1]) - 1 == j || abs(inst[i][2]) - 1 == j) {
-                found_qubit = true;
-                break;
+            else{
+                H_array[o] = I;
             }
         }
-        if (found_qubit) {
-            H_k = kron(H_k, H_m);
+        H = H_array[m-1];
+        for (int j = m-2; j >= 0; j--){
+            H = kron(H_array[j], H);
         }
-        else {
-            H_k = kron(H_k, I);
-        }
-        cx_mat H = HC + H_k;
+        H_m = H;
+        H_m.brief_print();
     }
- H.print();
-    return 0;
 }
 /*Intialise S for the if and else statements*/
 
