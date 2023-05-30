@@ -22,12 +22,22 @@ int main() {
     srand(time(NULL));
 
     /*Generate 3-SAT instances in this part of the code*/
-    int m = 4;
-    int n = 4;
+    int m = 1;
+    int n = 3;
     int inst[m][3];
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < 3; j++) {
-            int var = rand() % n + 1;
+            bool flag=true;
+            int var;
+            while(flag){
+                var = rand() % n + 1;
+                flag=false;
+                for(int k=0; k<j; k++){
+                    if(var==abs(inst[i][k])){
+                        flag=true;
+                    }
+                }
+            }
             int sign = pow(-1, rand() % 2);
             inst[i][j] = sign * var;
         }
@@ -78,28 +88,37 @@ int main() {
             H = kron(H_array[j], H);
         }
         H_m = H;
-        H_m.brief_print();
+        //H_m.print();
+
+        //for this clause k you need to generate the corresponding hamiltonian on variable qubits INSIDE THIS FOR LOOP. This clause has 3 non-trivial variables which will be acted on by either X or Z. All other variables are acted on by identity. Tensor these together then tensor the variable Hamiltonian with the clause Hamiltonian and THAT is one term of the full Hamiltonian which is a sum over clauses.
+
+        //Structure is H=sum_{clauses} H(on clause qubits corresponding to clause) tensor H(on variable qubits corresponding to clause)
+        cx_mat H_i;
+        H_i = 1.0 + 0i;
+        for (int i = 0; i < n; i++) {            
+            //for each variable qubit decide if I'm acting with I, X, or Z based on the clause k
+                    
+           
+        }
+         cout << "Variable Hamiltonian" << endl;
+        //HC += H_i;
+        //HC.print();
+    
     }
-}
+
 /* Below is the code I've made to generate the variable Hamiltonians: so far, it has yielded some reliable results but the signs for the full Hamiltonian, which are tensored with the Clause Hamiltonians in the form of
 kron(H_m,HC) appear to be negative -- which shouldn't be the case since the Full Hamiltonian is supposed to be invariant under conjugation.*/
 
-/* for (int i = 0; i < n; i++) {
-        cx_mat H_i;
-        H_i = 1.0 + 0i;
-        for (int j = 0; j < n; j++) {
-            if (i == j) {
-                H_i = kron(H_i, Z);
-            } else {
-                H_i = kron(H_i, X);
-            }
-        }
-        cout << "Variable Hamiltonian" << endl;
-        HC += H_i;
-        HC.print();
-                                            */ 
+//below here isn't right yet
+// for (int j = 0; j < n; j++) { //this for loop doesn't make sense.
+//     if (i == j) {
+//         H_i = kron(H_i, Z);
+//     } else {
+//         H_i = kron(H_i, X);
+//     }    
+                                             
 
-
+}
 /*Intialise S for the if and else statements*/
 
 /* Compute Avg. Sign <S>*/
