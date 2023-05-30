@@ -103,7 +103,8 @@ int main() {
          cout << "Variable Hamiltonian" << endl;
         //HC += H_i;
         //HC.print();
-    
+        //tensor H_i and H_m together to create term for this clause
+        //add this tensor product to the full Hamiltonian. 
     }
 
 /* Below is the code I've made to generate the variable Hamiltonians: so far, it has yielded some reliable results but the signs for the full Hamiltonian, which are tensored with the Clause Hamiltonians in the form of
