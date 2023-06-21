@@ -22,7 +22,7 @@ int main() {
     srand(time(NULL));
 
     /*Generate 3-SAT instances in this part of the code*/
-    int m = 3;
+    int m = 2;
     int n = 3;
     int inst[m][3];
     for (int i = 0; i < m; i++) {
@@ -46,14 +46,12 @@ int main() {
     /* print out 3-sat instance*/
     if (debug) {
         for (int i = 0; i < m; i++) {
-            cout << "Clause " << i << ": ";    
-            for (int k = 0; k < m; k++){               
-                for (int j = 0; j < 3; j++) {
-                    cout << inst[i][j] << " ";
-                }
+            cout << "Clause " << i << ": ";
+            for (int j = 0; j < 3; j++) {
+                cout << inst[i][j] << " ";
+            }
             cout << endl;
         }
-    }
     }
 
     /*Generate Hamiltonians in this part of the code*/
@@ -69,6 +67,8 @@ int main() {
 
     cx_mat H_array[m];
     cx_mat H;
+    cx_mat H_n;
+    cx_mat H_arr[n];
     cx_mat H_m_i = -(X+Z+I);
     cx_mat H_m;
     cx_mat S[3] = {Z, X, I};
@@ -77,25 +77,32 @@ int main() {
     //The code is done backwards, meaning that the tensor conditionals are done first and the main for loop is done later on.
     //This makes no difference whatsoever, as in how the code is looped (forward or backward) will make no difference.
     for (int k = 0; k < m; k++){
-        cx_mat H_i;
+    cx_mat H_i;
         H_i = 1.0 + 0i;
-
-        
-        //Create Hamiltonian acting on variable qubits
-        for (int i = 0; i < n; i++) {            
-            //for each variable qubit decide if I'm acting with I, X, or Z based on the clause k
-            for(int idx=0; idx<3; idx++){
+        for (int i = 0; i < n; i++) {         
+            for(int idx=0; idx < 3; idx++){
                 int curr_var = inst[k][idx];
+                cout << curr_var << " Curr Var" << endl;
+                if(abs(curr_var) == i && curr_var < k){
+                    H_arr[i] = Z;
+                }
+                else if(abs(curr_var) == i && curr_var < k){
+                    H_arr[i] = X;
+                }
+                else{
+                    H_arr[i] = I;
+                }
+                H_n = H_arr[i];
+                H_n.brief_print();
+                }
                 //write conditional statements based on curr_var to determine what Hamiltonian acts on qubit i. Will be one of I,X,Z
                 //want to break out of this for loop if abs(curr_var)=i once you've set the Hamiltonian appropriately 
-
-            }
-
-            //QUESTION: If I'm making the variable qubits act on/correspond to clause qubits, is it necessary for it to be kroneckered
-            //in the initial loop or to kronecker it after making for the loop go through the conditions first? 
+            //H_n = H_arr[i];
+        cout << "Variable Hamiltonians." << endl;
+        cout << "END OF Variable Hamiltonians." << endl;   
+            //for each variable qubit decide if I'm acting with I, X, or Z based on the clause k
+                    
         }
-
-        //Create Hamiltonian acting on clause qubits
         for (int o = 0; o < m; o++){
             if (o == k){
                 H_array[o] = H_m_i;
@@ -109,36 +116,18 @@ int main() {
             H = kron(H_array[j], H);
         }
         H_m = H;
-        //H_m.brief_print();
-    }
-    return 0;
-}
+        H_m.brief_print();
 
         //for this clause k you need to generate the corresponding hamiltonian on variable qubits INSIDE THIS FOR LOOP. This clause has 3 non-trivial variables which will be acted on by either X or Z. All other variables are acted on by identity. Tensor these together then tensor the variable Hamiltonian with the clause Hamiltonian and THAT is one term of the full Hamiltonian which is a sum over clauses.
 
         //Structure is H=sum_{clauses} H(on clause qubits corresponding to clause) tensor H(on variable qubits corresponding to clause)
-        /*cx_mat H_i;
-        H_i = 1.0 + 0i;
-        for (int i = 0; i < n; i++) {            
-            //for each variable qubit decide if I'm acting with I, X, or Z based on the clause k
-                    for(int k = 0; k < n; i++){
-                        if (k > i){
-                            H_i = Z;
-                        }
-                        else if (k < i){
-                            H_i = X;
-                        }
-                        else{
-                            H_i = I;
-                        }
-                    }
-           
-        }*/
-         //cout << "Variable Hamiltonian" << endl;
+        
         //HC += H_i;
         //HC.print();
         //tensor H_i and H_m together to create term for this clause
         //add this tensor product to the full Hamiltonian. 
+    }
+}
 
 /* Below is the code I've made to generate the variable Hamiltonians: so far, it has yielded some reliable results but the signs for the full Hamiltonian, which are tensored with the Clause Hamiltonians in the form of
 kron(H_m,HC) appear to be negative -- which shouldn't be the case since the Full Hamiltonian is supposed to be invariant under conjugation.*/
@@ -151,6 +140,7 @@ kron(H_m,HC) appear to be negative -- which shouldn't be the case since the Full
 //         H_i = kron(H_i, X);
 //     }    
                                              
+
 /*Intialise S for the if and else statements*/
 
 /* Compute Avg. Sign <S>*/
