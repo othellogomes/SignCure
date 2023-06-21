@@ -83,7 +83,7 @@ int main() {
             for(int idx=0; idx < 3; idx++){
                 int curr_var = inst[k][idx];
                 cout << curr_var << " Curr Var" << endl;
-                if(abs(curr_var) == i && curr_var < k){
+                if(abs(curr_var) == i && curr_var > k){
                     H_arr[i] = Z;
                 }
                 else if(abs(curr_var) == i && curr_var < k){
