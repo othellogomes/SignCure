@@ -16,13 +16,13 @@ using namespace std::complex_literals;
 
 /* main function*/
 int main() {
-    bool debug = true;
+     bool debug = true;
 
     /*initialize random seed*/
     srand(time(NULL));
 
     /*Generate 3-SAT instances in this part of the code*/
-    int m = 2;
+    int m = 1;
     int n = 3;
     int inst[m][3];
     for (int i = 0; i < m; i++) {
@@ -60,49 +60,62 @@ int main() {
     cx_mat Y = {{0, -1i}, {1i, 0}};
     cx_mat Z = {{1.0 + 0i, 0}, {0, -1.0 + 0i}};
     cx_mat I(2, 2, fill::eye);
+    cx_mat I_kron (pow(2,n),pow(2,n),fill::eye);
 
     //Initialising Hamiltonians
     cx_mat HC(pow(2, n), pow(2, n));
     HC.fill(0.0 + 0.0i);
 
     cx_mat H_array[m];
+    cx_mat H_arr[3][n];
+    cx_mat H_arra[n];
     cx_mat H;
-    cx_mat H_n;
-    cx_mat H_arr[n];
     cx_mat H_m_i = -(X+Z+I);
     cx_mat H_m;
-    cx_mat S[3] = {Z, X, I};
-
+    cx_mat S[3];
+    cx_mat H_1;
+//cx_mat Test_H = kron(I,I);
+//cx_mat Test_H2 = kron(Test_H, Z);
+//Test_H2.brief_print();
+//cout << "Test Kron Prod." << endl;
     //This generates the clause Hamiltonian using the for loop for tensoring with I or Clause side of H_m.
     //The code is done backwards, meaning that the tensor conditionals are done first and the main for loop is done later on.
     //This makes no difference whatsoever, as in how the code is looped (forward or backward) will make no difference.
     for (int k = 0; k < m; k++){
-    cx_mat H_i;
-        H_i = 1.0 + 0i;
-        for (int i = 0; i < n; i++) {         
-            for(int idx=0; idx < 3; idx++){
-                int curr_var = inst[k][idx];
-                cout << curr_var << " Curr Var" << endl;
-                if(abs(curr_var) == i && curr_var > k){
-                    H_arr[i] = Z;
+        // Create Hamiltonian acting on variable qubits
+        for (int idx = 0; idx < 3; idx++) {
+            H_1 = 1.0 + 0i;
+            cx_mat H_n;
+            // For each variable qubit, decide if I'm acting with I, X, or Z based on the clause k.
+            int curr_var = inst[k][idx];
+            for (int i = 0; i < n; i++) {
+                if (abs(curr_var) == i+1 && curr_var > 0) {
+                    H_arr[idx][i] = Z;
+                } else if (abs(curr_var) == i+1 && curr_var < 0) {
+                    H_arr[idx][i] = X;
+                } else {
+                    H_arr[idx][i] = I;
                 }
-                else if(abs(curr_var) == i && curr_var < k){
-                    H_arr[i] = X;
-                }
-                else{
-                    H_arr[i] = I;
-                }
-                H_n = H_arr[i];
-                H_n.brief_print();
-                }
-                //write conditional statements based on curr_var to determine what Hamiltonian acts on qubit i. Will be one of I,X,Z
-                //want to break out of this for loop if abs(curr_var)=i once you've set the Hamiltonian appropriately 
-            //H_n = H_arr[i];
-        cout << "Variable Hamiltonians." << endl;
-        cout << "END OF Variable Hamiltonians." << endl;   
-            //for each variable qubit decide if I'm acting with I, X, or Z based on the clause k
-                    
-        }
+                H_n = H_arr[idx][i];
+                H_1 = kron(H_1, H_n);
+}
+S[idx] = H_1;
+}
+
+cx_mat S1 = S[0];
+cout << "S1:" << endl;
+S1.brief_print();
+cx_mat S2 = S[1];
+cout << "S2:" << endl;
+S2.brief_print();
+cx_mat S3 = S[2];
+cout << "S3:" << endl;
+S3.brief_print();
+cout << "Variable Hamiltonians:" << endl; 
+
+cx_mat H_v = S1 + S2 + S3 + 2 * I_kron; 
+    
+        //Create Hamiltonian acting on clause qubits
         for (int o = 0; o < m; o++){
             if (o == k){
                 H_array[o] = H_m_i;
@@ -115,19 +128,47 @@ int main() {
         for (int j = m-2; j >= 0; j--){
             H = kron(H_array[j], H);
         }
-        H_m = H;
+        H_m = H; // Clause Side of HC Tensor Product.
         H_m.brief_print();
+        cout << "Clause Hamiltonians" << endl;
+    cx_mat H_C = kron(H_m, H_v);
+    H_C.brief_print();
+    cout << "Full Hamiltonian" << endl; 
+
+    // Summation of Hamiltonian over m clauses.
+    
+    cout << "Summed Hamiltonian" << endl;
+    }
+
+}
+
+
 
         //for this clause k you need to generate the corresponding hamiltonian on variable qubits INSIDE THIS FOR LOOP. This clause has 3 non-trivial variables which will be acted on by either X or Z. All other variables are acted on by identity. Tensor these together then tensor the variable Hamiltonian with the clause Hamiltonian and THAT is one term of the full Hamiltonian which is a sum over clauses.
 
         //Structure is H=sum_{clauses} H(on clause qubits corresponding to clause) tensor H(on variable qubits corresponding to clause)
-        
+        /*cx_mat H_i;
+        H_i = 1.0 + 0i;
+        for (int i = 0; i < n; i++) {            
+            //for each variable qubit decide if I'm acting with I, X, or Z based on the clause k
+                    for(int k = 0; k < n; i++){
+                        if (k > i){
+                            H_i = Z;
+                        }
+                        else if (k < i){
+                            H_i = X;
+                        }
+                        else{
+                            H_i = I;
+                        }
+                    }
+           
+        }*/
+         //cout << "Variable Hamiltonian" << endl;
         //HC += H_i;
         //HC.print();
         //tensor H_i and H_m together to create term for this clause
         //add this tensor product to the full Hamiltonian. 
-    }
-}
 
 /* Below is the code I've made to generate the variable Hamiltonians: so far, it has yielded some reliable results but the signs for the full Hamiltonian, which are tensored with the Clause Hamiltonians in the form of
 kron(H_m,HC) appear to be negative -- which shouldn't be the case since the Full Hamiltonian is supposed to be invariant under conjugation.*/
@@ -140,7 +181,6 @@ kron(H_m,HC) appear to be negative -- which shouldn't be the case since the Full
 //         H_i = kron(H_i, X);
 //     }    
                                              
-
 /*Intialise S for the if and else statements*/
 
 /* Compute Avg. Sign <S>*/
