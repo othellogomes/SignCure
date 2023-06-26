@@ -1,7 +1,7 @@
 /* Othello D. Gomes
 UMD - Institute for Advanced Computer Studies
 QuICS
-05/15/2023
+06/26/2023
 Sign Curing Numerics
 Use c++14
 */
@@ -22,7 +22,7 @@ int main() {
     srand(time(NULL));
 
     /*Generate 3-SAT instances in this part of the code*/
-    int m = 1;
+    int m = 2;
     int n = 3;
     int inst[m][3];
     for (int i = 0; i < m; i++) {
@@ -63,7 +63,7 @@ int main() {
     cx_mat I_kron (pow(2,n),pow(2,n),fill::eye);
 
     //Initialising Hamiltonians
-    cx_mat HC(pow(2, n), pow(2, n));
+    cx_mat HC(pow(2, n+m), pow(2, n+m));
     HC.fill(0.0 + 0.0i);
 
     cx_mat H_array[m];
@@ -81,6 +81,7 @@ int main() {
     //This generates the clause Hamiltonian using the for loop for tensoring with I or Clause side of H_m.
     //The code is done backwards, meaning that the tensor conditionals are done first and the main for loop is done later on.
     //This makes no difference whatsoever, as in how the code is looped (forward or backward) will make no difference.
+    
     for (int k = 0; k < m; k++){
         // Create Hamiltonian acting on variable qubits
         for (int idx = 0; idx < 3; idx++) {
@@ -98,9 +99,10 @@ int main() {
                 }
                 H_n = H_arr[idx][i];
                 H_1 = kron(H_1, H_n);
-}
-S[idx] = H_1;
-}
+            }
+
+        S[idx] = H_1;
+    }
 
 cx_mat S1 = S[0];
 cout << "S1:" << endl;
@@ -134,15 +136,17 @@ cx_mat H_v = S1 + S2 + S3 + 2 * I_kron;
     cx_mat H_C = kron(H_m, H_v);
     H_C.brief_print();
     cout << "Full Hamiltonian" << endl; 
-
+    HC += H_C;
     // Summation of Hamiltonian over m clauses.
-    
-    cout << "Summed Hamiltonian" << endl;
     }
+    HC.brief_print();
 
+    cout << "Summed H." << endl;
+
+    cx_mat eH = expmat(-HC);
+    eH.brief_print();
+    std::complex<double> avgSign = trace(eH)/trace(abs(eH));
 }
-
-
 
         //for this clause k you need to generate the corresponding hamiltonian on variable qubits INSIDE THIS FOR LOOP. This clause has 3 non-trivial variables which will be acted on by either X or Z. All other variables are acted on by identity. Tensor these together then tensor the variable Hamiltonian with the clause Hamiltonian and THAT is one term of the full Hamiltonian which is a sum over clauses.
 
@@ -184,7 +188,3 @@ kron(H_m,HC) appear to be negative -- which shouldn't be the case since the Full
 /*Intialise S for the if and else statements*/
 
 /* Compute Avg. Sign <S>*/
-
-//int eH = expmat(-H);
-
-//int avgSign = (trace(eH)/trace(abs(eH)));
