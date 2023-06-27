@@ -1,0 +1,61 @@
+Starting build...
+/usr/bin/g++ -fdiagnostics-color=always -g /home/ottomobile/Documents/Sign/SignCure.cpp -o /home/ottomobile/Documents/Sign/SignCure
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `arma::lapack::laenv(int*, char*, char*, int*, int*, int*, int*, unsigned long, unsigned long)':
+/usr/include/armadillo_bits/translate_lapack.hpp:1249: undefined reference to `wrapper2_ilaenv_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::heevd<std::complex<double> >(char*, char*, int*, std::complex<double>*, int*, std::complex<double>::value_type*, std::complex<double>*, int*, std::complex<double>::value_type*, int*, int*, int*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:249: undefined reference to `wrapper2_zheevd_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::heev<std::complex<double> >(char*, char*, int*, std::complex<double>*, int*, std::complex<double>::value_type*, std::complex<double>*, int*, std::complex<double>::value_type*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:206: undefined reference to `wrapper2_zheev_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::cx_gelsd<double>(int*, int*, int*, std::complex<double>*, int*, std::complex<double>*, int*, double*, double*, int*, std::complex<double>*, int*, double*, int*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:713: undefined reference to `wrapper2_zgelsd_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::trtrs<std::complex<double> >(char*, char*, char*, int*, int*, std::complex<double> const*, int*, std::complex<double>*, int*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:729: undefined reference to `wrapper2_ztrtrs_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::gesv<std::complex<double> >(int*, int*, std::complex<double>*, int*, int*, std::complex<double>*, int*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:569: undefined reference to `wrapper2_zgesv_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::cx_gbsvx<double, std::complex<double> >(char*, char*, int*, int*, int*, int*, std::complex<double>*, int*, std::complex<double>*, int*, int*, char*, double*, double*, std::complex<double>*, int*, std::complex<double>*, int*, double*, double*, double*, std::complex<double>*, double*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:819: undefined reference to `wrapper2_zgbsvx_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::cx_posvx<double, std::complex<double> >(char*, char*, int*, int*, std::complex<double>*, int*, std::complex<double>*, int*, char*, double*, std::complex<double>*, int*, std::complex<double>*, int*, double*, double*, double*, std::complex<double>*, double*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:659: undefined reference to `wrapper2_zposvx_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::cx_gesvx<double, std::complex<double> >(char*, char*, int*, int*, std::complex<double>*, int*, std::complex<double>*, int*, int*, char*, double*, double*, std::complex<double>*, int*, std::complex<double>*, int*, double*, double*, double*, std::complex<double>*, double*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:601: undefined reference to `wrapper2_zgesvx_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `arma::get_pod_type<std::complex<double> >::result arma::lapack::lanhe<std::complex<double> >(char*, char*, int*, std::complex<double>*, int*, arma::get_pod_type<std::complex<double> >::result*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:1055: undefined reference to `wrapper2_zlanhe_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::potrf<std::complex<double> >(char*, int*, std::complex<double>*, int*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:321: undefined reference to `wrapper2_zpotrf_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::potrs<std::complex<double> >(char*, int*, int const*, std::complex<double>*, int*, std::complex<double>*, int*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:343: undefined reference to `wrapper2_zpotrs_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `arma::get_pod_type<std::complex<double> >::result arma::lapack::lange<std::complex<double> >(char*, int*, int*, std::complex<double>*, int*, arma::get_pod_type<std::complex<double> >::result*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:1005: undefined reference to `wrapper2_zlange_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::getrf<std::complex<double> >(int*, int*, std::complex<double>*, int*, int*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:37: undefined reference to `wrapper2_zgetrf_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::getrs<std::complex<double> >(char*, int*, int*, std::complex<double>*, int*, int*, std::complex<double>*, int*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:53: undefined reference to `wrapper2_zgetrs_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::gels<std::complex<double> >(char*, int*, int*, int*, std::complex<double>*, int*, std::complex<double>*, int*, std::complex<double>*, int*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:679: undefined reference to `wrapper2_zgels_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::gtsv<std::complex<double> >(int*, int*, std::complex<double>*, std::complex<double>*, std::complex<double>*, std::complex<double>*, int*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:838: undefined reference to `wrapper2_zgtsv_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::gbsv<std::complex<double> >(int*, int*, int*, int*, std::complex<double>*, int*, int*, std::complex<double>*, int*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:787: undefined reference to `wrapper2_zgbsv_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::posv<std::complex<double> >(char*, int*, int*, std::complex<double>*, int*, std::complex<double>*, int*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:621: undefined reference to `wrapper2_zposv_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `arma::get_pod_type<std::complex<double> >::result arma::lapack::langb<std::complex<double> >(char*, int*, int*, int*, std::complex<double>*, int*, arma::get_pod_type<std::complex<double> >::result*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:1079: undefined reference to `wrapper2_zlangb_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::gbtrf<std::complex<double> >(int*, int*, int*, int*, std::complex<double>*, int*, int*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:750: undefined reference to `wrapper2_zgbtrf_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::gbtrs<std::complex<double> >(char*, int*, int*, int*, int*, std::complex<double>*, int*, int*, std::complex<double>*, int*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:766: undefined reference to `wrapper2_zgbtrs_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::cx_trcon<double>(char*, char*, char*, int*, std::complex<double> const*, int*, double*, std::complex<double>*, double*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:1197: undefined reference to `wrapper2_ztrcon_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::cx_pocon<double>(char*, int*, std::complex<double> const*, int*, double const*, double*, std::complex<double>*, double*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:1159: undefined reference to `wrapper2_zpocon_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::cx_gecon<double>(char*, int*, std::complex<double> const*, int*, double const*, double*, std::complex<double>*, double*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:1121: undefined reference to `wrapper2_zgecon_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::lapack::cx_gbcon<double>(char*, int*, int*, int*, std::complex<double> const*, int*, int const*, double const*, double*, std::complex<double>*, double*, int*)':
+/usr/include/armadillo_bits/translate_lapack.hpp:1235: undefined reference to `wrapper2_zgbcon_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::blas::gemv<std::complex<double> >(char const*, int const*, int const*, std::complex<double> const*, std::complex<double> const*, int const*, std::complex<double> const*, int const*, std::complex<double> const*, std::complex<double>*, int const*)':
+/usr/include/armadillo_bits/translate_blas.hpp:40: undefined reference to `wrapper2_zgemv_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::blas::gemm<std::complex<double> >(char const*, char const*, int const*, int const*, int const*, std::complex<double> const*, std::complex<double> const*, int const*, std::complex<double> const*, int const*, std::complex<double> const*, std::complex<double>*, int const*)':
+/usr/include/armadillo_bits/translate_blas.hpp:66: undefined reference to `wrapper2_zgemm_'
+/usr/bin/ld: /tmp/ccokPbyX.o: in function `void arma::blas::herk<double>(char const*, char const*, int const*, int const*, double const*, std::complex<double> const*, int const*, double const*, std::complex<double>*, int const*)':
+/usr/include/armadillo_bits/translate_blas.hpp:112: undefined reference to `wrapper2_zherk_'
+collect2: error: ld returned 1 exit status
