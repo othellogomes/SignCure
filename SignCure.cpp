@@ -1,7 +1,7 @@
 /* Othello D. Gomes
 UMD - Institute for Advanced Computer Studies
 QuICS
-07/11/2023
+05/15/2023
 Sign Curing Numerics
 Use c++14
 */
@@ -22,11 +22,11 @@ int main() {
     srand(time(NULL));
 
     /*Generate 3-SAT instances in this part of the code*/
-    int m = 1;
-    int n = 3;
+    int m = 2;
+    int n = 4;
     int inst[m][3];
-     complex<double> avgSign(1.0, 0.0);
-    while (avgSign == complex<double>(1.0, 0.0)){
+    //complex<double> avgSign (1.0,0.0);
+   //while(avgSign == complex<double> (1.0,0.0)){
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < 3; j++) {
             bool flag=true;
@@ -44,6 +44,8 @@ int main() {
             inst[i][j] = sign * var;
         }
     }
+
+    //Throw into a loop of 2 clauses and run until avgSign < 1.
 
     /* print out 3-sat instance*/
     if (debug) {
@@ -109,15 +111,24 @@ int main() {
 cx_mat S1 = S[0];
 cout << "S1:" << endl;
 S1.brief_print();
+S1.save("S1.csv",csv_ascii);
 cx_mat S2 = S[1];
 cout << "S2:" << endl;
 S2.brief_print();
+S2.save("S2.csv",csv_ascii);
 cx_mat S3 = S[2];
 cout << "S3:" << endl;
 S3.brief_print();
+S3.save("S3.csv",csv_ascii);
 cout << "Variable Hamiltonians:" << endl; 
 
 cx_mat H_v = S1 + S2 + S3 + 2 * I_kron; 
+
+I_kron.brief_print();
+I_kron.save("I_kron.csv",csv_ascii);
+
+H_v.brief_print();
+H_v.save("EX2_Var.csv",csv_ascii);
     
         //Create Hamiltonian acting on clause qubits
         for (int o = 0; o < m; o++){
@@ -142,60 +153,34 @@ cx_mat H_v = S1 + S2 + S3 + 2 * I_kron;
     // Summation of Hamiltonian over m clauses.
     }
     HC.brief_print();
+    //HC.save("EX2.csv",csv_ascii);
 
     cout << "Summed H." << endl;
 
+/* Compute Avg. Sign <S>*/ 
+
+    cx_mat H_2;
+    cx_mat H_stoq = HC;
+   for(int i = 0; i < n+m; i++){
+    for (int j = 0; j < n+m; j++){
+       // H_2 = -1.0 + 0i;
+        //H_stoq.brief_print();
+        if(i!=j){
+            H_stoq(i,j) = -abs(HC(i,j));
+            
+
+        }
+    }
+   }
     cx_mat eH = expmat(-HC);
-    eH.brief_print();
     complex<double> eH_1 = trace(eH);
-    complex<double> eH_2 = trace(abs(eH));
+    complex<double> eH_2 = trace(expmat(-H_stoq));
     complex<double> avgSign = eH_1/eH_2;
     cout << "Average Sign" << endl;
     cout << avgSign << endl;
+  
+   //cout << "Average Sign is not 1. " << endl;
+   
+    return 0;
 }
-cout << "avgSign is !(1.0,0.0)" << endl;
 
-return 0;
-}
-// Add Gadgets - ancillary qubits and Hamiltonians in that Lemma!!!!
-
-        //for this clause k you need to generate the corresponding hamiltonian on variable qubits INSIDE THIS FOR LOOP. This clause has 3 non-trivial variables which will be acted on by either X or Z. All other variables are acted on by identity. Tensor these together then tensor the variable Hamiltonian with the clause Hamiltonian and THAT is one term of the full Hamiltonian which is a sum over clauses.
-
-        //Structure is H=sum_{clauses} H(on clause qubits corresponding to clause) tensor H(on variable qubits corresponding to clause)
-        /*cx_mat H_i;
-        H_i = 1.0 + 0i;
-        for (int i = 0; i < n; i++) {            
-            //for each variable qubit decide if I'm acting with I, X, or Z based on the clause k
-                    for(int k = 0; k < n; i++){
-                        if (k > i){
-                            H_i = Z;
-                        }
-                        else if (k < i){
-                            H_i = X;
-                        }
-                        else{
-                            H_i = I;
-                        }
-                    }
-           
-        }*/
-         //cout << "Variable Hamiltonian" << endl;
-        //HC += H_i;
-        //HC.print();
-        //tensor H_i and H_m together to create term for this clause
-        //add this tensor product to the full Hamiltonian. 
-
-/* Below is the code I've made to generate the variable Hamiltonians: so far, it has yielded some reliable results but the signs for the full Hamiltonian, which are tensored with the Clause Hamiltonians in the form of
-kron(H_m,HC) appear to be negative -- which shouldn't be the case since the Full Hamiltonian is supposed to be invariant under conjugation.*/
-
-//below here isn't right yet
-// for (int j = 0; j < n; j++) { //this for loop doesn't make sense.
-//     if (i == j) {
-//         H_i = kron(H_i, Z);
-//     } else {
-//         H_i = kron(H_i, X);
-//     }    
-                                             
-/*Intialise S for the if and else statements*/
-
-/* Compute Avg. Sign <S>*/
