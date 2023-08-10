@@ -145,30 +145,48 @@ cx_mat H_v = S1 + S2 + S3 + 2 * I_kron;
     // Summation of Hamiltonian over m clauses.
 
     //Adding gadget
-    cx_mat I_kr (pow(2,3*(n+m)),pow(2,3*(n+m)),fill::eye);
+    cx_mat I_kr(pow(2,3*(n+m)),pow(2,3*(n+m)),fill::eye);
     cx_mat Hk = kron(HC, I_kr);
-    for (int u = 1; u < n+m; u++){
-        G_u[4] = 0;
-        for (int t = 0; t < [1,2,3,4]; t++){
-            
-        }
+    Hk.brief_print();
+   for (int u = 0; u < n+m; u++){
+    cx_mat G_u[4];
+    //For loop for the ancillary qubits, going from u, m+n+3(u-1) + 1.... m+n+3(u-1)+3
+    for(int l = 0; l < u; l++){
+        //probably have to add for loops for the ancillary qubits.
+        G_u[0] = -(X+Z);
+        G_u[1] = -(X*X + Y*Y + Z*Z);
+        G_u[2] = -(3*X*X + Y*Y + 2*Z*Z);
+        G_u[3] = -(X*X + Y*Y + Z*Z);
     }
+
+}
 
 
     }
 
     cout << "Summed H." << endl;
 
+     //cx_mat H_2;
+    cx_mat H_stoq = HC;
+   for(int i = 0; i < n+m; i++){
+    for (int j = 0; j < n+m; j++){
+       // H_2 = -1.0 + 0i;
+        //H_stoq.brief_print();
+        if(i!=j){
+            H_stoq(i,j) = -abs(HC(i,j));
+        }
+    }
+   }
     cx_mat eH = expmat(-HC);
     complex<double> eH_1 = trace(eH);
-    complex<double> eH_2 = trace(abs(eH));
+    complex<double> eH_2 = trace(expmat(-H_stoq));
     complex<double> avgSign = eH_1/eH_2;
     cout << "Average Sign" << endl;
     cout << avgSign << endl;
-//cout << "avgSign is !(1.0,0.0)" << endl;
-
-
-return 0;
+  
+   //cout << "Average Sign is not 1. " << endl;
+   
+    return 0;
 }
 // Add Gadgets - ancillary qubits and Hamiltonians in that Lemma!!!!
 
