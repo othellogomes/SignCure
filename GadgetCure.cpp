@@ -27,7 +27,7 @@ int main() {
     int inst[m][3];
      //complex<double> avgSign(1.0, 0.0);
     //while (avgSign == complex<double>(1.0, 0.0)){
-    /*for (int i = 0; i < m; i++) {
+    for (int i = 0; i < m; i++) {
         for (int j = 0; j < 3; j++) {
             bool flag=true;
             int var;
@@ -43,10 +43,7 @@ int main() {
             int sign = pow(-1, rand() % 2);
             inst[i][j] = sign * var;
         }
-    }*/
-    inst [0][0] = 1;
-    inst [0][1] = 2;
-    inst [0][2] = 3;
+    }
 
     /* print out 3-sat instance*/
     if (debug) {
@@ -148,21 +145,42 @@ cx_mat H_v = S1 + S2 + S3 + 2 * I_kron;
     cx_mat I_kr(pow(2,3*(n+m)),pow(2,3*(n+m)),fill::eye);
     cx_mat Hk = kron(HC, I_kr);
     Hk.brief_print();
-   for (int u = 0; u < n+m; u++){
+   for (int u = 0; u < n+m-1; u++){
+    int a_u = (n+m-1) + 3*u + 1;
+    int b_u = (n+m-1) + 3*u + 2;
+    int c_u = (n+m-1) + 3*u + 3;
+    //I can now see why this approach would be messy....
+    //Better to just create new identities and tensor them...
+    cx_mat I_au(pow(2,a_u),pow(2,a_u));
+    cx_mat I_bu(pow(2,b_u),pow(2,b_u));
+    cx_mat I_cu(pow(2,c_u),pow(2,c_u));
+    cx_mat I_u(pow(2,u),pow(2,u));
+
+    cx_mat G1 =-kron((I_cu),kron(X,I_u))-kron(I_cu,kron(Z,I_u));
+    cx_mat G2 =-kron(I,kron(X,kron(I-u,kron(X,I_au))));
+    cx_mat G3 =-kron(I,kron(Y,kron(I-u,kron(Y,I_au))));
+    cx_mat G4 =-kron(I,kron(Z,kron(I-u,kron(Z,I_au))));
+    cx_mat G5 = -3*kron(I_au,kron(X,kron(X,I_bu)));
+    cx_mat G6 = -kron(I_au,kron(Y,kron(Y,I_bu)));
+    cx_mat G7 = -2*kron(I_au,kron(Z,kron(Z,I_bu)));
+    cx_mat G8 = -kron(I_bu,kron(X,kron(X,I_cu)));
+    cx_mat G9 = -kron(I_bu,kron(Y,kron(Y,I_cu)));
+    cx_mat G10 = -kron(I_bu,kron(Z,kron(Z,I_cu)));
+
+    cx_mat G = G1 + G2 + G3 + G4 + G5 + G6 + G7 + G8 + G9 + G10; 
+    }
+    //Create loops for the ancillary qubits corresponding to the matrices within the gadget.
+    //This will definitely require conditionals similar to the variables of the Hamiltonian in line 97.
     cx_mat G_u[4];
     //For loop for the ancillary qubits, going from u, m+n+3(u-1) + 1.... m+n+3(u-1)+3
     for(int l = 0; l < u; l++){
-        //probably have to add for loops for the ancillary qubits.
+    //probably have to add for loops for the ancillary qubits.
         G_u[0] = -(X+Z);
         G_u[1] = -(X*X + Y*Y + Z*Z);
         G_u[2] = -(3*X*X + Y*Y + 2*Z*Z);
         G_u[3] = -(X*X + Y*Y + Z*Z);
     }
-
 }
-
-
-    }
 
     cout << "Summed H." << endl;
 
