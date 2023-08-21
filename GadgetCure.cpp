@@ -1,6 +1,6 @@
 /* Othello D. Gomes
-UMD - Institute for Advanced Computer Studies
-QuICS
+UMD - Institute for Advanced Computer Studies (UMIACS)
+Joint Center for Quantum Information and Computer Science (QuICS)
 08/03/2023
 Sign Curing Numerics w/ Gadgets
 Use c++14
@@ -151,57 +151,67 @@ cx_mat H_v = S1 + S2 + S3 + 2 * I_kron;
     int c_u = (n+m-1) + 3*u + 3;
     //I can now see why this approach would be messy....
     //Better to just create new identities and tensor them...
+
+    //Create functions of u and let every I_n be a function of u and the ancillary qubits.
     cx_mat I_au(pow(2,a_u),pow(2,a_u));
     cx_mat I_bu(pow(2,b_u),pow(2,b_u));
     cx_mat I_cu(pow(2,c_u),pow(2,c_u));
     cx_mat I_u(pow(2,u),pow(2,u));
+    cx_mat I_1[u] = {I_u,I_au, I_bu, I_cu};
+    cx_mat I_2[u] = {I_u,I_au, I_bu, I_cu};
+    cx_mat I_3[u] = {I_u,I_au, I_bu, I_cu};
+    cx_mat I_4[u] = {I_u,I_au, I_bu, I_cu};
 
-    cx_mat G1 =-kron((I_cu),kron(X,I_u))-kron(I_cu,kron(Z,I_u));
-    cx_mat G2 =-kron(I,kron(X,kron(I-u,kron(X,I_au))));
-    cx_mat G3 =-kron(I,kron(Y,kron(I-u,kron(Y,I_au))));
-    cx_mat G4 =-kron(I,kron(Z,kron(I-u,kron(Z,I_au))));
-    cx_mat G5 = -3*kron(I_au,kron(X,kron(X,I_bu)));
-    cx_mat G6 = -kron(I_au,kron(Y,kron(Y,I_bu)));
-    cx_mat G7 = -2*kron(I_au,kron(Z,kron(Z,I_bu)));
-    cx_mat G8 = -kron(I_bu,kron(X,kron(X,I_cu)));
-    cx_mat G9 = -kron(I_bu,kron(Y,kron(Y,I_cu)));
-    cx_mat G10 = -kron(I_bu,kron(Z,kron(Z,I_cu)));
+    cx_mat G1 =-kron(I_1[u],kron(X,I_2[u]))-kron(I_1[u],kron(Z,I_2[u]));
+    cx_mat G2 =-kron(I_1[u],kron(X,kron(I_2[u],kron(X,I_3[u]))));
+    cx_mat G3 =-kron(I_1[u],kron(Y,kron(I_2[u],kron(Y,I_3[u]))));
+    cx_mat G4 =-kron(I_1[u],kron(Z,kron(I_2[u],kron(Z,I_3[u]))));
+    cx_mat G5 = -3*kron(I_1[u],kron(X,kron(X,I_2[u])));
+    cx_mat G6 = -kron(I_1[u],kron(Y,kron(Y,I_2[u])));
+    cx_mat G7 = -2*kron(I_1[u],kron(Z,kron(Z,I_2[u])));
+    cx_mat G8 = -kron(I_1[u],kron(X,kron(X,I_2[u])));
+    cx_mat G9 = -kron(I_1[u],kron(Y,kron(Y,I_2[u])));
+    cx_mat G10 = -kron(I_2[u],kron(Z,kron(Z,I_2[u])));
+
+    //Tested and it seems with the I_n[u] variable format, there's a bad_allocation memory
+    //error.
 
     cx_mat G = G1 + G2 + G3 + G4 + G5 + G6 + G7 + G8 + G9 + G10; 
-    }
+    cx_mat H_Had = HC + G;
+    
     //Create loops for the ancillary qubits corresponding to the matrices within the gadget.
     //This will definitely require conditionals similar to the variables of the Hamiltonian in line 97.
-    cx_mat G_u[4];
+    //cx_mat G_u[4];
     //For loop for the ancillary qubits, going from u, m+n+3(u-1) + 1.... m+n+3(u-1)+3
-    for(int l = 0; l < u; l++){
+    /*for(int l = 0; l < u; l++){
     //probably have to add for loops for the ancillary qubits.
-        G_u[0] = -(X+Z);
-        G_u[1] = -(X*X + Y*Y + Z*Z);
-        G_u[2] = -(3*X*X + Y*Y + 2*Z*Z);
-        G_u[3] = -(X*X + Y*Y + Z*Z);
-    }
-}
+        //G_u[0] = -(X+Z);
+        //G_u[1] = -(X*X + Y*Y + Z*Z);
+        //G_u[2] = -(3*X*X + Y*Y + 2*Z*Z);
+        //G_u[3] = -(X*X + Y*Y + Z*Z);
+    }*/
 
     cout << "Summed H." << endl;
 
      //cx_mat H_2;
-    cx_mat H_stoq = HC;
+    cx_mat H_stoq = H_Had;
    for(int i = 0; i < n+m; i++){
     for (int j = 0; j < n+m; j++){
        // H_2 = -1.0 + 0i;
         //H_stoq.brief_print();
         if(i!=j){
-            H_stoq(i,j) = -abs(HC(i,j));
+            H_stoq(i,j) = -abs(H_Had(i,j));
         }
     }
    }
-    cx_mat eH = expmat(-HC);
+    cx_mat eH = expmat(-H_Had);
     complex<double> eH_1 = trace(eH);
     complex<double> eH_2 = trace(expmat(-H_stoq));
     complex<double> avgSign = eH_1/eH_2;
     cout << "Average Sign" << endl;
     cout << avgSign << endl;
-  
+    }
+    }
    //cout << "Average Sign is not 1. " << endl;
    
     return 0;
